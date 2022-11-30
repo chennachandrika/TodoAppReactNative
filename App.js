@@ -13,9 +13,13 @@ export default function App() {
         <Stack.Screen
           name="Home"
           component={TodoApp}
-          options={{ title: 'Welcome' }}
+          options={{ title: "Welcome" }}
         />
-        <Stack.Screen name="Todo" component={Todo} options={{ title: 'Edit Todo' }}/>
+        <Stack.Screen
+          name="Todo"
+          component={Todo}
+          options={{ title: "Edit Todo" }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

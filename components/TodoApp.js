@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,15 +9,33 @@ import {
   TextInput,
   Button,
 } from "react-native";
-import Todo from "./Todo";
+import "react-native-get-random-values";
+import { v4 as uuidv4 } from "uuid";
 
-const TodoApp = ({ navigation }) => {
+const TodoApp = ({ navigation, route }) => {
   const [todoList, setTodoList] = useState([]);
   const [todoText, setTodoText] = useState();
   const handleList = () => {
-    setTodoList([...todoList, todoText]);
-    setTodoText("");
+    if (todoText !== "") {
+      setTodoList([...todoList, { todo: todoText, id: uuidv4() }]);
+      setTodoText("");
+    }
   };
+  const updateValues = () => {
+    if (route.params?.todo) {
+      const prevTodo = todoList.filter((todo) => todo.id === route.params.id);
+      if (prevTodo[0].id === route.params.id) {
+        const newList = todoList.filter((todo) => todo.id !== route.params.id);
+        setTodoList([
+          ...newList,
+          { id: prevTodo[0].id, todo: route.params.todo },
+        ]);
+      }
+    }
+  };
+  useEffect(() => {
+    updateValues();
+  }, [route.params?.todo]);
   const renderTodoAdder = () => (
     <View style={styles.addTodo}>
       <TextInput
@@ -41,9 +59,11 @@ const TodoApp = ({ navigation }) => {
                 key={i}
                 numberOfLines={1}
                 style={styles.todoContainer}
-                onPress={() => navigation.navigate("Todo", { name: todo })}
+                onPress={() =>
+                  navigation.navigate("Todo", { todo: todo.todo, id: todo.id })
+                }
               >
-                {todo}
+                {todo.todo}
               </Text>
             ))}
         </View>
@@ -53,12 +73,12 @@ const TodoApp = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-    todoContainer: {
-        backgroundColor: "#EBEBEB",
-        padding: 10,
-        borderRadius: 10,
-        margin:4
-      },
+  todoContainer: {
+    backgroundColor: "#EBEBEB",
+    padding: 10,
+    borderRadius: 10,
+    margin: 4,
+  },
   addTodo: {
     flexDirection: "row",
     padding: 10,
