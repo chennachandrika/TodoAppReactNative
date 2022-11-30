@@ -1,8 +1,8 @@
 import { View, Text, StyleSheet } from "react-native";
 
-const Todo = ({ text }) => (
+const Todo = ( { navigation, route } ) => (
   <View style={styles.todoContainer}>
-    <Text>{text}</Text>
+    <Text>{route.params.name}</Text>
   </View>
 );
 

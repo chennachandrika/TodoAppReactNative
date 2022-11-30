@@ -1,4 +1,4 @@
-import React,{ useState } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -11,12 +11,12 @@ import {
 } from "react-native";
 import Todo from "./Todo";
 
-const TodoApp = () => {
+const TodoApp = ({ navigation }) => {
   const [todoList, setTodoList] = useState([]);
   const [todoText, setTodoText] = useState();
   const handleList = () => {
-   setTodoList([...todoList,todoText])
-   setTodoText("")
+    setTodoList([...todoList, todoText]);
+    setTodoText("");
   };
   const renderTodoAdder = () => (
     <View style={styles.addTodo}>
@@ -26,7 +26,7 @@ const TodoApp = () => {
         style={styles.input}
         placeholder="Add New Todo"
       />
-      <Button title="+" onPress={()=>handleList()} />
+      <Button title="+" onPress={() => handleList()} />
     </View>
   );
   return (
@@ -35,7 +35,17 @@ const TodoApp = () => {
         <Text style={styles.titleFont}>Todo App</Text>
         {renderTodoAdder()}
         <View style={styles.todosWrapper}>
-            {todoList && todoList.map(todo=><Todo key={todo} text={todo}/>)}
+          {todoList &&
+            todoList.map((todo, i) => (
+              <Text
+                key={i}
+                numberOfLines={1}
+                style={styles.todoContainer}
+                onPress={() => navigation.navigate("Todo", { name: todo })}
+              >
+                {todo}
+              </Text>
+            ))}
         </View>
       </View>
     </SafeAreaView>
@@ -43,6 +53,12 @@ const TodoApp = () => {
 };
 
 const styles = StyleSheet.create({
+    todoContainer: {
+        backgroundColor: "#EBEBEB",
+        padding: 10,
+        borderRadius: 10,
+        margin:4
+      },
   addTodo: {
     flexDirection: "row",
     padding: 10,
